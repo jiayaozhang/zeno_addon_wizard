@@ -8,6 +8,7 @@
 #include "R3Mesh.h"
 */
 
+#include <iostream>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -85,7 +86,8 @@ namespace zeno
         virtual void apply() override
         {
             auto generator = get_input<zeno::LSysGenerator>("generator");
-            auto ruleName = get_param<char>("ruleName");
+            //cant use char!
+            auto ruleName = get_param<std::string>("ruleName")[0];
             generator->appendRule(ruleName);
             set_output("generator", std::move(generator));
         }
@@ -99,7 +101,9 @@ namespace zeno
                     {"LSysGenerator", "generator"},
                 },
                 {
-                    {"char", "ruleName"},
+                    //cant use char!
+                    //{"char", "ruleName", ""},
+                    {"string", "ruleName", ""},
                 },
                 {"LSystem"}});
 
@@ -166,6 +170,8 @@ namespace zeno
             auto generator = get_input<zeno::LSysGenerator>("LSysGenerator");
             auto code = generator->getCode();
             auto iterations = get_param<int>("iterations");
+
+            std::cout << "my code: " << code << '\n';            
 
             /*need check
             auto mesh = std::make_unique<R3Mesh>();
