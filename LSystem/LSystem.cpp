@@ -9,11 +9,100 @@
 */
 
 #include <string>
-#include <string_view>
+#include <vector>
 #include <unordered_map>
 
 namespace zeno
 {
+    struct LSysGenerator : zeno::IObject
+    {
+        int iterations_;
+        int defaultCoefficient_;
+        int thickness_;
+        std::vector<std::string> rules_;
+
+        LSysGenerator(
+            const int iterations,
+            const int defaultCoefficient,
+            const int thickness)
+            : iterations_{iterations},
+              defaultCoefficient_{defaultCoefficient},
+              thickness_{thickness},
+              rules_{} {}
+
+        std::string getCode()
+        {
+            std::string code{""};
+            code += iterations_ + '\n';
+            code += defaultCoefficient_ + '\n';
+            code += thickness_ + '\n';
+            for (auto rule : rules_)
+            {
+                code += rule + '\n';
+            }
+            return code;
+        }
+        
+        void appendRule(const char ruleName)
+        {
+            rules_.emplace_back(std::string{ruleName} + '=');
+        }
+
+        void appendOp(const char op)
+        {
+            rules_[rules_.size() - 1] += op;
+        }
+    };
+
+    struct MakeLSysGenerator : zeno::INode
+    {
+        virtual void apply() override
+        {
+            auto iterations = get_param<int>("iterations");
+            auto defaultCoefficient = get_param<int>("defaultCoefficient");
+            auto thickness = get_param<int>("thickness");
+
+            auto generator = std::make_shared<LSysGenerator>(
+                iterations, defaultCoefficient, thickness);
+            set_output("generator", std::move(generator));
+        }
+    };
+
+    ZENDEFNODE(MakeLSysGenerator,
+        { /* inputs: */ {
+        }, /* outputs: */ {
+        "generator",
+        }, /* params: */ {
+        {"int", "iterations", "0"},
+        {"int", "defaultCoefficient", "0"},
+        {"int", "thicjness", "0"},
+        }, /* category: */ {
+        "LSystem",
+        }});
+
+    struct AppendLSysRule : zeno::INode
+    {
+        virtual void apply() override
+        {
+            auto generator = get_input<zeno::LSysGenerator>("generator");
+            auto ruleName = get_param<char>("ruleName");
+            generator->appendRule(ruleName);
+            set_output("generator", std::move(generator));
+        }
+    };
+
+    ZENDEFNODE(AppendLSysRule,
+               {{
+                    {"LSysGenerator", "generator"},
+                },
+                {
+                    {"LSysGenerator", "generator"},
+                },
+                {
+                    {"char", "ruleName"},
+                },
+                {"LSystem"}});
+
     static const std::unordered_map<std::string, char> kConvTable{
         {"turnRight", '+'},
         {"turnLeft", '-'},
@@ -28,31 +117,29 @@ namespace zeno
         {"restoreState", ']'},
     };
 
-    struct AppendLOP : zeno::INode
+    struct AppendLSysOP : zeno::INode
     {
         virtual void apply() override
         {
+            auto generator = get_input<zeno::LSysGenerator>("generator");
+            auto opStr = get_param<std::string>("opStr");
+            generator->appendOp(kConvTable.at(opStr));
+            set_output("generator", std::move(generator));
             auto LCommand = std::make_shared<zeno::StringObject>();
-
-            auto instring = get_input<zeno::StringObject>("LCommand")->get();
-            auto type = get_param<std::string>("op_type");
-            instring += kConvTable.at(type);
-            LCommand->set(instring);
-
-            set_output("LOP", std::move(LCommand));
         }
     };
 
-    ZENDEFNODE(AppendLOP,
+    ZENDEFNODE(AppendLSysOP,
                {{
-                    {"StringObject", "LCommand", ""},
+                    {"LSysGenerator", "generator"},
                 },
                 {
-                    {"StringObject", "LOP"},
+                    {"LSysGenerator", "generator"},
                 },
                 {
+                    /*the enum feature is useless???
+                    //maybe use x-marco way
                     {"enum Begin "
-                     //maybe use x-marco way
                      "turnRight" " "
                      "turnLeft" " "
                      "pitchDown" " "
@@ -65,18 +152,10 @@ namespace zeno
                      "saveState" " "
                      "restoreState",
                      "op_type", "turnRight"},
+                     */
+                    {"string", "op_type", "turnRight"},
                 },
                 {"LSystem"}});
-
-    struct LSysGenerator : zeno::IObject
-    {
-        std::string code;
-        std::string getCode() { return code; }
-        void appendOp(const char &s)
-        {
-            code += s;
-        }
-    };
 
     struct ProceduralTree : zeno::INode
     {
