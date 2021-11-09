@@ -28,3 +28,5 @@ add_subdirectory(external/zeno)
 
 # Add your ZENO node library
 add_subdirectory(YourProject)
+
+add_subdirectory(LSystem)
