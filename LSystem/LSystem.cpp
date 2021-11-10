@@ -5,8 +5,9 @@
 /* todo
 #include "R2/R2.h"
 #include "R3/R3.h"
-#include "R3Mesh.h"
 */
+//#include "R3Mesh.h"
+
 
 #include <iostream>
 #include <string>
@@ -76,7 +77,7 @@ namespace zeno
         }, /* params: */ {
         {"int", "iterations", "0"},
         {"int", "defaultCoefficient", "0"},
-        {"int", "thicjness", "0"},
+        {"int", "thickness", "0"},
         }, /* category: */ {
         "LSystem",
         }});
@@ -126,10 +127,18 @@ namespace zeno
         virtual void apply() override
         {
             auto generator = get_input<zeno::LSysGenerator>("generator");
-            auto opStr = get_param<std::string>("opStr");
-            generator->appendOp(kConvTable.at(opStr));
+            auto ruleName = get_param<std::string>("ruleName");
+            if (ruleName.length() != 0)
+            {
+                generator->appendOp(ruleName[0]);
+            }
+            else
+            {
+                auto opStr = get_param<std::string>("opStr");
+                //probaby no match
+                generator->appendOp(kConvTable.at(opStr));
+            }
             set_output("generator", std::move(generator));
-            auto LCommand = std::make_shared<zeno::StringObject>();
         }
     };
 
@@ -141,7 +150,8 @@ namespace zeno
                     {"LSysGenerator", "generator"},
                 },
                 {
-                    /*the enum feature is useless???
+                    {"string", "ruleName", ""},
+                    /*the enum feature is useless
                     //maybe use x-marco way
                     {"enum Begin "
                      "turnRight" " "
@@ -157,6 +167,7 @@ namespace zeno
                      "restoreState",
                      "op_type", "turnRight"},
                      */
+                     {"enum Begin turnLeft turnRight Forward Roll Pitch Yaw", "op_type", "turnLeft"},
                     {"string", "op_type", "turnRight"},
                 },
                 {"LSystem"}});
@@ -170,7 +181,7 @@ namespace zeno
             auto generator = get_input<zeno::LSysGenerator>("LSysGenerator");
             auto code = generator->getCode();
             auto iterations = get_param<int>("iterations");
-
+            // I want to see this cout string... To comform the function is right.
             std::cout << "my code: " << code << '\n';            
 
             /*need check
