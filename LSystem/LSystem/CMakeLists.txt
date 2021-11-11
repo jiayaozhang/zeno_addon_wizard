@@ -3,8 +3,10 @@ project(LSystem LANGUAGES CXX)
 
 add_library(LSystem)
 
+aux_source_directory(. L_SYSTEM_SRCS)
+
 target_sources(LSystem 
-  PRIVATE	LCore.cpp LMesh.cpp
+  PRIVATE	${L_SYSTEM_SRCS}
 )
 target_include_directories(LSystem 
   PUBLIC

@@ -6,6 +6,12 @@
 void LMesh::tree(std::string &&code)
 {
     LCore core{this};
-    auto axiom{core.generateFromCode(std::move(code))};
-    std::cout << axiom << '\n';
+    auto axiom{core.genAxiomFromCode(std::move(code))};
+    core.draw(axiom);
+    _update();
+}
+
+void LMesh::_update()
+{
+    // todo
 }

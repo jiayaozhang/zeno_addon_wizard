@@ -5,6 +5,9 @@
 
 class LMesh
 {
+private:
+    void _update();
+
 public:
     void tree(std::string &&code);
 }; // class LMesh

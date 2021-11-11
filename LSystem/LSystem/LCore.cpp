@@ -6,20 +6,25 @@
 #include <iostream>
 
 LCore::LCore(LMesh *mesh)
-    : _mesh{mesh} {}
+    : _mesh{mesh},
+      _turtle{mesh} {}
 
-std::string LCore::generateFromCode(std::string &&code)
+std::string LCore::genAxiomFromCode(std::string &&code)
 {
-    std::stringstream ss{std::move(code)};
     auto isSetIterations{false};
     int iterations;
+
     auto isSetDefaultCoefficient{false};
     float defaultCoefficient;
+
     auto isSetThickness{false};
     float thickness;
+
     std::string axiom;
+
     AssociativeArray rules;
-    std::cout << "code :" << code << "\n";
+
+    std::stringstream ss{std::move(code)};
     while (!ss.eof())
     {
         char c;
@@ -43,7 +48,6 @@ std::string LCore::generateFromCode(std::string &&code)
         }
         if (!isSetDefaultCoefficient)
         {
-            std::cout << "3\n";
             ss >> defaultCoefficient;
             isSetDefaultCoefficient = true;
             continue;
@@ -51,6 +55,7 @@ std::string LCore::generateFromCode(std::string &&code)
         if (!isSetThickness)
         {
             ss >> thickness;
+            // todo
             //turtle.thickness = thickness / 100;
             isSetThickness = true;
             continue;
@@ -106,4 +111,115 @@ std::string LCore::_replaceAll(std::string &&str, std::string_view from, std::st
         start_pos += to.length();
     }
     return str;
+}
+
+void LCore::draw(std::string tree)
+{
+    char paramBuf[1024];
+    int bufIndex = 0;
+    std::string data = tree;
+    float param = 0;
+    bool getParam = false, checkParam = false;
+    char command;
+    for (int i = 0; i < data.size(); ++i)
+    {
+        char c = data[i];
+        if (getParam)
+        {
+            if (c == ')')
+            {
+                paramBuf[bufIndex] = 0;
+                bufIndex = 0;
+                param = atof(paramBuf);
+                getParam = false;
+                _run(command, param);
+            }
+            else
+                paramBuf[bufIndex++] = c;
+            continue;
+        }
+        if (checkParam)
+        {
+            checkParam = false;
+            if (c == '(')
+            {
+                param = 0;
+                getParam = true;
+                continue;
+            }
+            _run(command, 1);
+        }
+        command = c;
+        checkParam = true;
+    }
+    if (checkParam)
+        _run(command, 1);
+
+    std::cout << data << std::endl;
+}
+
+void LCore::_run(const char command, const float param)
+{
+    float co = _defaultCoefficient;
+    float num = param;
+    if (num == 1)
+        num *= co;
+    switch (command)
+    {
+    case '+':
+        _turtle.turnLeft(num);
+        break;
+    case '-':
+        _turtle.turnRight(num);
+        break;
+    case '&':
+        _turtle.pitchDown(num);
+        break;
+    case '^':
+        _turtle.pitchUp(num);
+        break;
+    case '<':
+        _turtle.thicken(num);
+        break;
+    case '\\':
+        _turtle.rollLeft(num);
+        break;
+    case '/':
+        ////////////////////////////////////////  L++ ////////////////////////////////////////////////
+        _turtle.rollRight(num);
+        break;
+    case '>':
+        _turtle.narrow(num);
+        break;
+    case '%':
+        _turtle.setReduction(param);
+        break;
+    case '=':
+        _turtle.setThickness(param);
+        break;
+    case '|':
+        _turtle.turn180(param);
+        break;
+    case '*':
+        _turtle.drawLeaf(param);
+        break;
+    case 'F':
+        [[fallthrough]];
+    case 'f':
+        _turtle.draw(param);
+        [[fallthrough]];
+    case 'G':
+        [[fallthrough]];
+    case 'g':
+        _turtle.move(param);
+        break;
+    case '[':
+        _turtle.save();
+        break;
+    case ']':
+        _turtle.restore();
+        break;
+    default:
+        break;
+    }
 }

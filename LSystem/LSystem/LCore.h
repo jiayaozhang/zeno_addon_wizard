@@ -2,6 +2,7 @@
 #define _L_CORE_H_
 
 #include "LMesh.h"
+#include "LTurtle.h"
 
 #include <string>
 #include <string_view>
@@ -17,6 +18,8 @@ class LCore
 {
 private:
     LMesh *_mesh;
+    LTurtleComposite _turtle;
+    float _defaultCoefficient{0.0f};
 
     std::string _reproduce(
         std::string &&axiom,
@@ -32,9 +35,12 @@ private:
         std::string_view from,
         std::string_view to);
 
+    void _run(const char command,const float param);
+
 public:
     LCore(LMesh *mesh);
-    std::string generateFromCode(std::string &&code);
+    std::string genAxiomFromCode(std::string &&code);
+    void draw(std::string axiom);
 }; // class LCore
 
 #endif
