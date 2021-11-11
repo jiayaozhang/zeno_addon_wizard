@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <sstream>
 
-inline LCore::LCore(LMesh *mesh)
+LCore::LCore(LMesh *mesh)
     : _mesh{mesh} {}
 
 std::string LCore::generateFromCode(std::string &&code)

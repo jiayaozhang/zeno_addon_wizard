@@ -59,9 +59,15 @@ namespace zeno
             auto defaultCoefficient = get_param<int>("defaultCoefficient");
             auto thickness = get_param<int>("thickness");
 
-            //LSystem::LMesh mesh;
-            std::string code = "";
-            //mesh.tree(std::move(code));
+            LMesh mesh;
+            std::string code = "3\n"
+            "1\n"
+            "2\n"
+            "fAB\n"
+            "A=AB\n"
+            "B=B\n"
+            "@\n";
+            mesh.tree(std::move(code));
 
             auto generator = std::make_shared<LSysGenerator>(
                 iterations, defaultCoefficient, thickness);
