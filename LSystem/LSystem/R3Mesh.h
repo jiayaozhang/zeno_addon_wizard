@@ -105,15 +105,6 @@ struct R3Mesh {
 
   // Smoothing and Loop subdivision (2nd Project)
 
-  // File input/output 
-  int Read(const char *filename);
-  int ReadRay(const char *filename);
-  int ReadOff(const char *filename,int plus=false);
-  int ReadImage(const char *filename);
-  int Write(const char *filename);
-  int WriteRay(const char *filename);
-  int WriteOff(const char *filename);
-  int WriteOffPlus(const char *filename);
   // Low-level creation functions
   R3MeshVertex *CreateVertex(const R3Point& position, 
     const R3Vector& normal=R3zero_vector, const R2Point& texcoords=R2zero_point);

@@ -31,5 +31,8 @@ class R2Segment;
 
 #include "R2Point.h"
 #include "R2Vector.h"
+#include "R2Line.h"
+#include "R2Segment.h"
+#include "R2Distance.h"
 
 #endif
