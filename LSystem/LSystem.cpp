@@ -2,13 +2,6 @@
 #include "zeno/types/StringObject.h"
 #include "zeno/types/PrimitiveObject.h"
 
-/* todo
-#include "R2/R2.h"
-#include "R3/R3.h"
-*/
-//#include "R3Mesh.h"
-
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -181,6 +174,7 @@ namespace zeno
             auto generator = get_input<zeno::LSysGenerator>("LSysGenerator");
             auto code = generator->getCode();
             auto iterations = get_param<int>("iterations");
+            zeno::vec3f a;
             // I want to see this cout string... To comform the function is right.
             std::cout << "my code: " << code << '\n';            
 
