@@ -2,6 +2,8 @@
 #include "zeno/types/StringObject.h"
 #include "zeno/types/PrimitiveObject.h"
 
+#include "LSystem/LMesh.h"
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -56,6 +58,10 @@ namespace zeno
             auto iterations = get_param<int>("iterations");
             auto defaultCoefficient = get_param<int>("defaultCoefficient");
             auto thickness = get_param<int>("thickness");
+
+            //LSystem::LMesh mesh;
+            std::string code = "";
+            //mesh.tree(std::move(code));
 
             auto generator = std::make_shared<LSysGenerator>(
                 iterations, defaultCoefficient, thickness);
