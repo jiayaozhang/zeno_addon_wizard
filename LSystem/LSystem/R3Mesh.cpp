@@ -542,56 +542,6 @@ Write(const char *filename)
 // IMAGE FILE INPUT/OUTPUT
 ////////////////////////////////////////////////////////////
 
-int R3Mesh::
-ReadImage(const char *filename)
-{
-  // Create a mesh by reading an image file, 
-  // constructing vertices at (x,y,luminance), 
-  // and connecting adjacent pixels into faces. 
-  // That is, the image is interpretted as a height field, 
-  // where the luminance of each pixel provides its z-coordinate.
-
-  // Read image
-  R2Image *image = new R2Image();
-  if (!image->Read(filename)) return 0;
-
-  // Create vertices and store in arrays
-  R3MeshVertex ***vertices = new R3MeshVertex **[image->Width() ];
-  for (int i = 0; i < image->Width(); i++) {
-    vertices[i] = new R3MeshVertex *[image->Height() ];
-    for (int j = 0; j < image->Height(); j++) {
-      double luminance = image->Pixel(i, j).Luminance();
-      double z = luminance * image->Width();
-      R3Point position((double) i, (double) j, z);
-      R2Point texcoords((double) i, (double) j);
-      vertices[i][j] = CreateVertex(position, R3zero_vector, texcoords);
-    }
-  }
-
-  // Create faces
-  vector<R3MeshVertex *> face_vertices;
-  for (int i = 1; i < image->Width(); i++) {
-    for (int j = 1; j < image->Height(); j++) {
-      face_vertices.clear();
-      face_vertices.push_back(vertices[i-1][j-1]);
-      face_vertices.push_back(vertices[i][j-1]);
-      face_vertices.push_back(vertices[i][j]);
-      face_vertices.push_back(vertices[i-1][j]);
-      CreateFace(face_vertices);
-    }
-  }
-
-  // Delete vertex arrays
-  for (int i = 0; i < image->Width(); i++) delete [] vertices[i];
-    delete [] vertices;
-
-  // Delete image
-  delete image;
-
-  // Return success
-  return 1;
-}
-
 
 
 ////////////////////////////////////////////////////////////

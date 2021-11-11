@@ -39,10 +39,9 @@ class R3Box;
 class R3Sphere;
 class R3Matrix;
 
-
+#include "R2.h"
 
 // Class include files
-
 #include "R3Point.h"
 #include "R3Vector.h"
 #include "R3Line.h"
