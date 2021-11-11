@@ -1,15 +1,15 @@
-#ifndef _L_TURTLE_H_
-#define _L_TURTLE_H_
+#ifndef _TURTLE_H_
+#define _TURTLE_H_
 
-#include "LMesh.h"
+#include "R3Mesh.h"
 
 #include <stack>
 
 // Composite 组合模式
-class LTurtleComponent
+class TurtleComponent
 {
 public:
-    virtual ~LTurtleComponent() = default;
+    virtual ~TurtleComponent() = default;
     void turnRight(float angle);
     void turnLeft(float angle);
     void pitchDown(float angle);
@@ -22,20 +22,20 @@ public:
     void narrow(float param);
     void setThickness(float param);
     void setReduction(float param);
-}; // class LTurtleComponent
+}; // class TurtleComponent
 
-class LTurtleComposite
-    : public LTurtleComponent
+class TurtleComposite
+    : public TurtleComponent
 {
-    LMesh *_mesh;
-    std::stack<LTurtleComponent> _children;
+    R3Mesh *_mesh;
+    std::stack<TurtleComponent> _children;
 
 public:
-    LTurtleComposite(LMesh *mesh);
+    TurtleComposite(R3Mesh *mesh);
     void save();
     void restore();
     void draw(float param);
     void drawLeaf(float param);
-}; // class LTurtleComposite
+}; // class TurtleComposite
 
 #endif

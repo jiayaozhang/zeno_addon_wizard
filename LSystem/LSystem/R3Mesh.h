@@ -1,9 +1,9 @@
-#ifndef _L_MESH_H_
-#define _L_MESH_H_
+#ifndef _R3_MESH_H_
+#define _R3_MESH_H_
 
 #include <string>
 
-class LMesh
+class R3Mesh
 {
 private:
     void _update();

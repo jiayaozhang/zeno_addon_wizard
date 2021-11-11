@@ -2,7 +2,7 @@
 #include "zeno/types/StringObject.h"
 #include "zeno/types/PrimitiveObject.h"
 
-#include "LSystem/LMesh.h"
+#include "LSystem/R3Mesh.h"
 
 #include <iostream>
 #include <string>
@@ -59,7 +59,7 @@ namespace zeno
             auto defaultCoefficient = get_param<int>("defaultCoefficient");
             auto thickness = get_param<int>("thickness");
 
-            LMesh mesh;
+            R3Mesh mesh;
             std::string code = "3\n"
             "1\n"
             "2\n"

@@ -1,15 +1,15 @@
-#include "LCore.h"
-#include "LMesh.h"
+#include "Core.h"
+#include "R3Mesh.h"
 
 #include <cstdlib>
 #include <sstream>
 #include <iostream>
 
-LCore::LCore(LMesh *mesh)
+Core::Core(R3Mesh *mesh)
     : _mesh{mesh},
       _turtle{mesh} {}
 
-std::string LCore::genAxiomFromCode(std::string &&code)
+std::string Core::genAxiomFromCode(std::string &&code)
 {
     auto isSetIterations{false};
     int iterations;
@@ -74,7 +74,7 @@ std::string LCore::genAxiomFromCode(std::string &&code)
     return _reproduce(std::move(axiom), rules, iterations);
 }
 
-std::string LCore::_reproduce(
+std::string Core::_reproduce(
     std::string &&axiom,
     const AssociativeArray &rules,
     const int iterations)
@@ -86,7 +86,7 @@ std::string LCore::_reproduce(
     return axiom;
 }
 
-std::string LCore::_produce(
+std::string Core::_produce(
     std::string &&axiom,
     const AssociativeArray &rules)
 {
@@ -98,7 +98,7 @@ std::string LCore::_produce(
     return axiom;
 }
 
-std::string LCore::_replaceAll(std::string &&str, std::string_view from, std::string_view to)
+std::string Core::_replaceAll(std::string &&str, std::string_view from, std::string_view to)
 {
     if (from.empty())
     {
@@ -113,7 +113,7 @@ std::string LCore::_replaceAll(std::string &&str, std::string_view from, std::st
     return str;
 }
 
-void LCore::draw(std::string tree)
+void Core::draw(std::string tree)
 {
     char paramBuf[1024];
     int bufIndex = 0;
@@ -158,7 +158,7 @@ void LCore::draw(std::string tree)
     std::cout << data << std::endl;
 }
 
-void LCore::_run(const char command, const float param)
+void Core::_run(const char command, const float param)
 {
     float co = _defaultCoefficient;
     float num = param;
@@ -205,13 +205,13 @@ void LCore::_run(const char command, const float param)
         break;
     case 'F':
         [[fallthrough]];
-    case 'f':
+    case 'f' : 
         _turtle.draw(param);
         [[fallthrough]];
-    case 'G':
+     case 'G' : 
         [[fallthrough]];
-    case 'g':
-        _turtle.move(param);
+    case 'g' :
+    _turtle.move(param);
         break;
     case '[':
         _turtle.save();

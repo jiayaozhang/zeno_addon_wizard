@@ -1,8 +1,8 @@
 #ifndef _L_CORE_H_
 #define _L_CORE_H_
 
-#include "LMesh.h"
-#include "LTurtle.h"
+#include "R3Mesh.h"
+#include "Turtle.h"
 
 #include <string>
 #include <string_view>
@@ -14,11 +14,11 @@ using AssociativeArray = std::unordered_map<
     std::string,
     std::vector<std::string>>;
 
-class LCore
+class Core
 {
 private:
-    LMesh *_mesh;
-    LTurtleComposite _turtle;
+    R3Mesh *_mesh;
+    TurtleComposite _turtle;
     float _defaultCoefficient{0.0f};
 
     std::string _reproduce(
@@ -38,9 +38,9 @@ private:
     void _run(const char command,const float param);
 
 public:
-    LCore(LMesh *mesh);
+    Core(R3Mesh *mesh);
     std::string genAxiomFromCode(std::string &&code);
     void draw(std::string axiom);
-}; // class LCore
+}; // class Core
 
 #endif

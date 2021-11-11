@@ -1,17 +1,17 @@
-#include "LMesh.h"
-#include "LCore.h"
+#include "R3Mesh.h"
+#include "Core.h"
 
 #include <iostream>
 
-void LMesh::tree(std::string &&code)
+void R3Mesh::tree(std::string &&code)
 {
-    LCore core{this};
+    Core core{this};
     auto axiom{core.genAxiomFromCode(std::move(code))};
     core.draw(axiom);
     _update();
 }
 
-void LMesh::_update()
+void R3Mesh::_update()
 {
     // todo
 }
