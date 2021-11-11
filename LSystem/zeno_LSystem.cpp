@@ -64,7 +64,7 @@ namespace zeno
             "1\n"
             "2\n"
             "fAB\n"
-            "A=AB\n"
+            "A=BA\n"
             "B=B\n"
             "@\n";
             mesh.tree(std::move(code));

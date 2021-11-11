@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include <sstream>
+#include <iostream>
 
 LCore::LCore(LMesh *mesh)
     : _mesh{mesh} {}
@@ -18,6 +19,7 @@ std::string LCore::generateFromCode(std::string &&code)
     float thickness;
     std::string axiom;
     AssociativeArray rules;
+    std::cout << "code :" << code << "\n";
     while (!ss.eof())
     {
         char c;
@@ -41,6 +43,7 @@ std::string LCore::generateFromCode(std::string &&code)
         }
         if (!isSetDefaultCoefficient)
         {
+            std::cout << "3\n";
             ss >> defaultCoefficient;
             isSetDefaultCoefficient = true;
             continue;
@@ -49,7 +52,7 @@ std::string LCore::generateFromCode(std::string &&code)
         {
             ss >> thickness;
             //turtle.thickness = thickness / 100;
-            isSetDefaultCoefficient = true;
+            isSetThickness = true;
             continue;
         }
         getline(ss, line);
@@ -85,21 +88,22 @@ std::string LCore::_produce(
     for (const auto &[key, value] : rules)
     {
         int index = rand() % value.size();
-        // printf("Selected %d out of %d : %s\n",index,value.size(),value[index].c_str());
-        _replaceAll(axiom, key, value[index]);
+        axiom = _replaceAll(std::move(axiom), key, value[index]);
     }
     return axiom;
 }
-void LCore::_replaceAll(std::string &str, std::string_view from, std::string_view to)
+
+std::string LCore::_replaceAll(std::string &&str, std::string_view from, std::string_view to)
 {
     if (from.empty())
     {
-        return;
+        return str;
     }
     std::size_t start_pos{0};
     while ((start_pos = str.find(from, start_pos)) != std::string::npos)
     {
         str.replace(start_pos, from.length(), to);
-        start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+        start_pos += to.length();
     }
+    return str;
 }

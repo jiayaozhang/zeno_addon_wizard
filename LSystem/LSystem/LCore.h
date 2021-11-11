@@ -27,7 +27,10 @@ private:
         std::string &&axiom,
         const AssociativeArray &rules);
 
-    void _replaceAll(std::string &str, std::string_view from, std::string_view to);
+    std::string _replaceAll(
+        std::string &&str,
+        std::string_view from,
+        std::string_view to);
 
 public:
     LCore(LMesh *mesh);
