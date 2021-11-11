@@ -1,6 +1,5 @@
 // Include file for the R2 point class 
 
-#include "R2.h"
 
 // Class definition 
 

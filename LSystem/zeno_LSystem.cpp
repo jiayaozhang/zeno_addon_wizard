@@ -59,16 +59,6 @@ namespace zeno
             auto defaultCoefficient = get_param<int>("defaultCoefficient");
             auto thickness = get_param<int>("thickness");
 
-            R3Mesh mesh;
-            std::string code = "3\n"
-            "1\n"
-            "2\n"
-            "fAB\n"
-            "A=BA\n"
-            "B=B\n"
-            "@\n";
-            mesh.Tree(code);
-
             auto generator = std::make_shared<LSysGenerator>(
                 iterations, defaultCoefficient, thickness);
             set_output("generator", std::move(generator));
@@ -181,28 +171,30 @@ namespace zeno
     {
         virtual void apply() override
         {
-            auto prim = std::make_shared<zeno::PrimitiveObject>();
 
             auto generator = get_input<zeno::LSysGenerator>("LSysGenerator");
-            auto code = generator->getCode();
-            auto iterations = get_param<int>("iterations");
-            zeno::vec3f a;
-            // I want to see this cout string... To comform the function is right.
-            std::cout << "my code: " << code << '\n';            
+            //auto code = generator->getCode();
 
-            /*need check
-            auto mesh = std::make_unique<R3Mesh>();
-            mesh->Tree(code, iterations);
+            std::string code = "3\n"
+            "1\n"
+            "2\n"
+            "fAB\n"
+            "A=BA\n"
+            "B=B\n"
+            "@\n";
+
+            R3Mesh mesh;
+            mesh.Tree(code);
 
             auto prim = std::make_shared<zeno::PrimitiveObject>();
             auto &pos = prim->add_attr<zeno::vec3f>("pos");
             auto &uv = prim->add_attr<zeno::vec3f>("uv");
             auto &nrm = prim->add_attr<zeno::vec3f>("nrm");
-            ​
             std::unordered_map<R3MeshVertex *, int> m;
-            ​for (auto i{0}; i < mesh->NVertices(); ++i)
+            
+            for (auto i{0}; i < mesh.NVertices(); ++i)
             {
-                const auto& v{mesh->Vertex(i)};
+                const auto& v{mesh.Vertex(i)};
 
                 const auto& p{v->position};
                 pos.push_back(zeno::vec3f(p.X(), p.Y(), p.Z()));
@@ -216,16 +208,14 @@ namespace zeno
                 m[v] = i;
             }
 
-            ​for (auto i{0}; i < mesh->NFaces(); ++i)
+            for (auto i{0}; i < mesh.NFaces(); ++i)
             {
-                const auto& f{mesh->Face(i)};
+                const auto& f{mesh.Face(i)};
                 auto t0 = m[f->vertices[0]];
                 auto t1 = m[f->vertices[1]];
                 auto t2 = m[f->vertices[2]];
                 prim->tris[i] = zeno::vec3i(t0, t1, t2);
             }
-            */
-
             set_output("prim", prim);
         }
     };
@@ -237,7 +227,6 @@ namespace zeno
                                     {"primitive", "prim"},
                                 },
                                 {
-                                    {"int", "iterations", "0"},
                                 },
                                 {"LSystem"}});
 
