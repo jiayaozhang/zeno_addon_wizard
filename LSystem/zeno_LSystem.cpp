@@ -67,7 +67,7 @@ namespace zeno
             "A=BA\n"
             "B=B\n"
             "@\n";
-            mesh.tree(std::move(code));
+            mesh.Tree(code);
 
             auto generator = std::make_shared<LSysGenerator>(
                 iterations, defaultCoefficient, thickness);
